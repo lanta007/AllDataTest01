@@ -301,7 +301,7 @@ app3.post('/api/CreateDataUser', (req, res) => {
 }); 
 app3.get('/api/GetDataUser', (req, res) => {
     try {
-        get(ref(db,'datauser'))
+        get(ref(db,'datausers'))
         .then((snapshot) => {
             let a = [];
             snapshot.forEach(snap => {
@@ -442,25 +442,31 @@ app3.post('/api/CreateDataComment', (req, res) => {
     var commentId = req.body.commentId;
     var UserId = req.body.UserId;
     var date = req.body.date;
-    var comment = req.body.comment;
+    var commentText = req.body.comment;
+    var postId = req.body.postId;
 
     try {
         console.log('UserId', UserId );
         console.log('commentId', commentId);
-        console.log('comment', comment);
+        console.log('comment', commentText);
         console.log('date', date);
+        console.log('postId', postId );
 
-        console.log('path','datacomment/'+ UserId+commentId+comment+
-        date)
-        const post = (UserId + "commentId" + commentId );
-        set(ref(db,'datacomment/'+comment),
-            {
-               "UserId": UserId,
-               "commentId": commentId,
-               "comment": comment,
-               "date":new Date()+'',
-        }
-        );
+        const commentData = {
+            "postId": postId,
+            "UserId": UserId,
+            "commentId": commentId,
+            "comment": commentText,
+            "date": new Date().toString()
+        };
+
+        console.log('path', 'datacomment/' + UserId + commentId + commentText + date + postId);
+
+        // สร้างคีย์ที่เป็นการรวม UserId และ commentId เพื่อใช้เป็น key ใน Realtime Database
+        const commentKey = 'postId' + '' + postId + '' + 'userId' + UserId + 'commentId' + commentId;
+
+        set(ref(db, 'datacomment/' + commentKey), commentData);
+
         return res.status(200).json({
             RespCode: 200,
             RespMessage: 'Comment created successfully.'
@@ -472,7 +478,8 @@ app3.post('/api/CreateDataComment', (req, res) => {
             RespMessage: err.message
         });
     }
-}); 
+});
+
 app3.get('/api/GetDataComment', (req, res) => {
     try {
         get(ref(db,'datacomment'))
@@ -606,4 +613,4 @@ app3.delete('/api/DeleteDataComment', (req, res) => {
     }
 });
 
-//609
+//123456789
