@@ -481,17 +481,28 @@ app3.post('/api/CreateDataComment', (req, res) => {
 });
 
 app3.get('/api/GetDataComment', (req, res) => {
+    
     try {
         get(ref(db,'datacomment'))
         .then((snapshot) => {
-            let a = [];
+            let a = {};
             snapshot.forEach(snap => {
-                a.push(snap.val());
+                if (!a[snap.val().postId]){
+                    a[snap.val().postId] = []
+                
+                }
+
+            
+                a[snap.val().postId].push({
+                    "UserId": snap.val().UserId,
+                    "commentId": snap.val().commentId,
+                    "comment": snap.val().comment,
+                     "date": snap.val().date, 
+                })
+               
             })
             console.log(snapshot.val())
-            //console.log(propertyNames);
-            //console.log(propertyValues);
-            //console.log(entries);
+            
 
             if( snapshot.exists() ) {
                 return res.status(200).json({
