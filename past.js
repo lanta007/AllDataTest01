@@ -301,7 +301,7 @@ app3.post('/api/CreateDataUser', (req, res) => {
 }); 
 app3.get('/api/GetDataUser', (req, res) => {
     try {
-        get(ref(db,'datausers'))
+        get(ref(db,'datauser'))
         .then((snapshot) => {
             let a = [];
             snapshot.forEach(snap => {
